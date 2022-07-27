@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NanoPaymentSystem.Application.Repository;
 using NanoPaymentSystem.Domain.DomainEvents;
 
 namespace NanoPaymentSystem.Application.NotificationHandler;
@@ -10,39 +11,41 @@ internal class PaymentDomainEventHandler :
     INotificationHandler<PaymentRejectedEvent>,
     INotificationHandler<PaymentCancelledEvent>
 {
-    private readonly IMessageBroker _messageBroker;
+    private readonly IPaymentOutboxStore _paymentOutboxStore;
 
-    public PaymentDomainEventHandler(IMessageBroker messageBroker)
-        => _messageBroker = messageBroker;
+    public PaymentDomainEventHandler(IPaymentOutboxStore paymentOutboxStore)
+    {
+        _paymentOutboxStore = paymentOutboxStore;
+    }
 
     /// <inheritdoc />
     public Task Handle(PaymentCreatedEvent notification, CancellationToken cancellationToken)
-        => _messageBroker.Publish(
-            new IntegrationEvent(notification.PaymentId, notification.PaymentStatus, notification.Event),
+        => _paymentOutboxStore.Add(
+            new PaymentOutboxItem(notification.PaymentId, notification.PaymentStatus, notification.Event),
             cancellationToken);
-    
+
 
     /// <inheritdoc />
     public Task Handle(PaymentProcessingStartedEvent notification, CancellationToken cancellationToken)
-        => _messageBroker.Publish(
-            new IntegrationEvent(notification.PaymentId, notification.PaymentStatus, notification.Event),
+        => _paymentOutboxStore.Add(
+            new PaymentOutboxItem(notification.PaymentId, notification.PaymentStatus, notification.Event),
             cancellationToken);
 
     /// <inheritdoc />
     public Task Handle(PaymentAuthorizedEvent notification, CancellationToken cancellationToken)
-        => _messageBroker.Publish(
-            new IntegrationEvent(notification.PaymentId, notification.PaymentStatus, notification.Event),
+        => _paymentOutboxStore.Add(
+            new PaymentOutboxItem(notification.PaymentId, notification.PaymentStatus, notification.Event),
             cancellationToken);
 
     /// <inheritdoc />
     public Task Handle(PaymentRejectedEvent notification, CancellationToken cancellationToken)
-        => _messageBroker.Publish(
-            new IntegrationEvent(notification.PaymentId, notification.PaymentStatus, notification.Event),
+        => _paymentOutboxStore.Add(
+            new PaymentOutboxItem(notification.PaymentId, notification.PaymentStatus, notification.Event),
             cancellationToken);
 
     /// <inheritdoc />
     public Task Handle(PaymentCancelledEvent notification, CancellationToken cancellationToken)
-        => _messageBroker.Publish(
-            new IntegrationEvent(notification.PaymentId, notification.PaymentStatus, notification.Event),
+        => _paymentOutboxStore.Add(
+            new PaymentOutboxItem(notification.PaymentId, notification.PaymentStatus, notification.Event),
             cancellationToken);
 }

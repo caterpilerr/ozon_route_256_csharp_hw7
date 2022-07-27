@@ -12,6 +12,7 @@ public static class Composer
         var dbConnectionString = configuration.GetConnectionString("DbConnection");
         services.AddSingleton<IPaymentRepository>(new PaymentRepository(dbConnectionString));
         services.AddSingleton<IEventStore>(new EventStore(dbConnectionString));
+        services.AddSingleton<IPaymentOutboxStore>(new PaymentOutboxStore(dbConnectionString));
         return services;
     }
 }

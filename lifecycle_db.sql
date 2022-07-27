@@ -7,6 +7,10 @@ create table payment_lifecycle
 	data text not null
 );
 
+create sequence payment_lifecycle_id_seq
+    start 1
+    increment 1;
+
 create unique index payment_lifecycle_id_uindex
 	on payment_lifecycle (id);
 
